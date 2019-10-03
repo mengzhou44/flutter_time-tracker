@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
-import '../common-widgets/custom-raised-button.dart';
+import '../common/widgets/custom-raised-button.dart';
 
 class SignInButton extends CustomRaisedButton {
-  final String text;
-  final Color color;
-  final Color textColor;
-  final VoidCallback onPressed;
-  final Image logo;
-
   static List<Widget> createChildren(text, textColor, logo) {
     final child = Text(
       text,
@@ -21,8 +15,13 @@ class SignInButton extends CustomRaisedButton {
   }
 
   SignInButton(
-      {this.text, this.color, this.textColor, this.onPressed, this.logo})
-      : super(
+      {@required String text,
+      @required Color color,
+      @required Color textColor,
+      @required VoidCallback onPressed,
+      Image logo})
+      : assert(text != null),
+        super(
             child: Row(
               children: createChildren(text, textColor, logo),
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

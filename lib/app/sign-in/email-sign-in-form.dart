@@ -17,18 +17,23 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  final FocusNode _passwordFocusNode = FocusNode();
+
   String get _email => _emailController.text;
   String get _password => _passwordController.text;
 
-  void _submit(BuildContext context) async {
+  void _emailEditingComplete() {
+    FocusScope.of(context).requestFocus(_passwordFocusNode);
+  }
+
+  void _submit() async {
     try {
       if (_formType == EmailSignInFormType.signIn) {
-        await  widget.auth.signInWithEmailAndPasswprd(_email, _password);
+        await widget.auth.signInWithEmailAndPasswprd(_email, _password);
       } else {
         await widget.auth.createUserWithEmailAndPasswprd(_email, _password);
       }
       Navigator.of(context).pop();
-
     } catch (e) {
       print(e);
     }
@@ -61,33 +66,39 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   }
 
   Widget _buildEmailTextField() {
-     return TextField(
-        controller: _emailController,
-        decoration:
-            InputDecoration(hintText: 'test@example.com', labelText: 'Email'),
-        autocorrect: false,
-        keyboardType: TextInputType.emailAddress,
-        textInputAction: TextInputAction.next,
-      );
+    return TextField(
+      controller: _emailController,
+      decoration:
+          InputDecoration(hintText: 'test@example.com', labelText: 'Email'),
+      autocorrect: false,
+      keyboardType: TextInputType.emailAddress,
+      textInputAction: TextInputAction.next,
+      onEditingComplete: _emailEditingComplete,
+      onChanged: (value) => setState(() {}),
+    );
   }
 
   Widget _buildPasswordTextField() {
-     return   TextField(
-        controller: _passwordController,
-        obscureText: true,
-        decoration:
-            InputDecoration(hintText: 'password', labelText: 'Password'),
-         textInputAction: TextInputAction.done,
-      );
+    return TextField(
+      controller: _passwordController,
+      focusNode: _passwordFocusNode,
+      obscureText: true,
+      decoration: InputDecoration(hintText: 'password', labelText: 'Password'),
+      textInputAction: TextInputAction.done,
+      onEditingComplete: _submit,
+      onChanged: (value) => setState(() {}),
+    );
   }
 
-  List<Widget> _buildChildren(BuildContext context) {
+  List<Widget> _buildChildren() {
+    final submitEnabled = (_email.isNotEmpty && _password.isNotEmpty);
     return [
       _buildEmailTextField(),
       SizedBox(height: 16),
       _buildPasswordTextField(),
       SizedBox(height: 16),
-      FormSubmitButton(text: _getPrimaryText(), onPressed: () {_submit(context);}),
+      FormSubmitButton(
+          text: _getPrimaryText(), onPressed: submitEnabled ? _submit : null),
       SizedBox(height: 8),
       FlatButton(child: Text(_getSecondaryText()), onPressed: _toggleFormType)
     ];
@@ -98,7 +109,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
-        children: _buildChildren(context),
+        children: _buildChildren(),
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
       ),

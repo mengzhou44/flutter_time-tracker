@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './sign-in-button.dart';
 import '../common/services/auth.dart';
+import './email-sign-in-page.dart';
 
 class SignInPage extends StatelessWidget {
   SignInPage({@required this.auth});
@@ -22,6 +23,13 @@ class SignInPage extends StatelessWidget {
     }
   }
 
+  Future<void> _signInWithEmail(BuildContext context) async {
+    Navigator.of(context).push(MaterialPageRoute(
+      fullscreenDialog: true,
+      builder: (context) => EmailSignInPage(auth:auth),
+    ));
+  }
+
   Future<void> _signInWithFacebook() async {
     try {
       await auth.signInWithFacebook();
@@ -34,12 +42,12 @@ class SignInPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Time Tracker'), elevation: 2),
-      body: _buildContent(),
+      body: _buildContent(context),
       backgroundColor: Colors.grey[200],
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(16),
       child: Column(
@@ -73,7 +81,7 @@ class SignInPage extends StatelessWidget {
             text: 'Sign in with Email',
             textColor: Colors.white,
             color: Colors.teal[700],
-            onPressed: () {},
+            onPressed: () { _signInWithEmail(context); },
           ),
           SizedBox(height: 8),
           Text(

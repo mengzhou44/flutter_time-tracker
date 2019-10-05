@@ -12,6 +12,8 @@ abstract class AuthBase {
   Future<User> signInAnonymously();
   Future<User> signInWithGoogle();
   Future<User> signInWithFacebook();
+  Future<User> signInWithEmailAndPasswprd(String email, String password);
+  Future<User> createUserWithEmailAndPasswprd(String email, String password);
   Future<User> get currentUser;
   Future<void> signOut();
   Stream<User> get onAuthStateChanged;
@@ -33,6 +35,19 @@ class Auth implements AuthBase {
 
   Future<User> signInAnonymously() async {
     var authResult = await _firebaseAuth.signInAnonymously();
+    return _userFromFirebase(authResult.user);
+  }
+
+  Future<User> signInWithEmailAndPasswprd(String email, String password) async {
+    var authResult = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email, password: password);
+    return _userFromFirebase(authResult.user);
+  }
+
+  Future<User> createUserWithEmailAndPasswprd(
+      String email, String password) async {
+    var authResult = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email, password: password);
     return _userFromFirebase(authResult.user);
   }
 
@@ -74,7 +89,6 @@ class Auth implements AuthBase {
       throw StateError('Missing Facebook access token');
     }
   }
-
 
   Future<User> get currentUser async {
     var temp = await _firebaseAuth.currentUser();

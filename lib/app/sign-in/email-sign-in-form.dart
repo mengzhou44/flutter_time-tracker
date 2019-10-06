@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_time_tracker/app/common/services/auth.dart';
+import 'package:flutter_time_tracker/app/sign-in/validators.dart';
 import '../common/widgets/form-submit-button.dart';
 
 enum EmailSignInFormType { signIn, register }
 
-class EmailSignInForm extends StatefulWidget {
+class EmailSignInForm extends StatefulWidget with EmailAndPasswordValidators {
   final AuthBase auth;
   EmailSignInForm({this.auth});
   @override
@@ -18,16 +19,29 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   final TextEditingController _passwordController = TextEditingController();
 
   final FocusNode _passwordFocusNode = FocusNode();
+  final FocusNode _emailFocusNode = FocusNode();
 
   String get _email => _emailController.text;
   String get _password => _passwordController.text;
+  bool _isLoading = false;
 
   void _emailEditingComplete() {
-    FocusScope.of(context).requestFocus(_passwordFocusNode);
+    FocusNode next = _emailFocusNode;
+
+    bool emailValid = widget.emailValidator.isValid(_email);
+    if (emailValid == true) {
+      next = _passwordFocusNode;
+    }
+    FocusScope.of(context).requestFocus(next);
   }
 
   void _submit() async {
+    setState(() {
+      _isLoading = true;
+    });
+
     try {
+      await Future.delayed(Duration(seconds: 3));
       if (_formType == EmailSignInFormType.signIn) {
         await widget.auth.signInWithEmailAndPasswprd(_email, _password);
       } else {
@@ -35,7 +49,26 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       }
       Navigator.of(context).pop();
     } catch (e) {
-      print(e);
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Sign in failed!'),
+              content: Text(e.toString()),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Ok'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -68,6 +101,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   Widget _buildEmailTextField() {
     return TextField(
       controller: _emailController,
+      focusNode: _emailFocusNode,
       decoration:
           InputDecoration(hintText: 'test@example.com', labelText: 'Email'),
       autocorrect: false,
@@ -91,7 +125,10 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   }
 
   List<Widget> _buildChildren() {
-    final submitEnabled = (_email.isNotEmpty && _password.isNotEmpty);
+    final submitEnabled = widget.emailValidator.isValid(_email) &&
+        widget.passwordValidator.isValid(_password) &&
+        _isLoading == false;
+
     return [
       _buildEmailTextField(),
       SizedBox(height: 16),
@@ -100,7 +137,9 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       FormSubmitButton(
           text: _getPrimaryText(), onPressed: submitEnabled ? _submit : null),
       SizedBox(height: 8),
-      FlatButton(child: Text(_getSecondaryText()), onPressed: _toggleFormType)
+      FlatButton(
+          child: Text(_getSecondaryText()),
+          onPressed: _isLoading == true ? null : _toggleFormType)
     ];
   }
 

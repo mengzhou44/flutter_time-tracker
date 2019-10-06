@@ -10,8 +10,10 @@ class EmailSignInPage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(title: Text('Time Tracker'), elevation: 2),
         backgroundColor: Colors.grey[200],
-        body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Card(child: EmailSignInForm(auth:auth))));
+        body: SingleChildScrollView(
+                  child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Card(child: EmailSignInForm(auth:auth))),
+        ));
   }
 }

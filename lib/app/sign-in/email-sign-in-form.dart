@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_time_tracker/app/common/services/auth-provider.dart';
 import 'package:flutter_time_tracker/app/common/services/auth.dart';
+import 'package:flutter_time_tracker/app/common/widgets/patform-alert-dialog.dart';
 import 'package:flutter_time_tracker/app/sign-in/validators.dart';
 import '../common/widgets/form-submit-button.dart';
 
 enum EmailSignInFormType { signIn, register }
 
 class EmailSignInForm extends StatefulWidget with EmailAndPasswordValidators {
-  final AuthBase auth;
-  EmailSignInForm({this.auth});
+
   @override
   _EmailSignInFormState createState() => _EmailSignInFormState();
 }
@@ -41,30 +42,20 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
     });
 
     try {
-      await Future.delayed(Duration(seconds: 3));
+       AuthBase auth =AuthProvider.of(context);
+
       if (_formType == EmailSignInFormType.signIn) {
-        await widget.auth.signInWithEmailAndPasswprd(_email, _password);
+        await auth.signInWithEmailAndPasswprd(_email, _password);
       } else {
-        await widget.auth.createUserWithEmailAndPasswprd(_email, _password);
+        await auth.createUserWithEmailAndPasswprd(_email, _password);
       }
       Navigator.of(context).pop();
     } catch (e) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('Sign in failed!'),
-              content: Text(e.toString()),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('Ok'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            );
-          });
+      PlatformAlertDialog(
+                title: 'Sign in failed!',
+                content: e.toString(),
+                defaultActionText: 'Ok')
+                .show(context);
     } finally {
       setState(() {
         _isLoading = false;

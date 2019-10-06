@@ -97,8 +97,12 @@ class Auth implements AuthBase {
 
   Future<void> signOut() async {
     try {
-      GoogleSignIn googleSignIn = GoogleSignIn();
+      final googleSignIn = GoogleSignIn();
       await googleSignIn.signOut();
+
+      final facebookLogin = FacebookLogin();
+      await facebookLogin.logOut();
+
       await _firebaseAuth.signOut();
     } catch (exception) {
       print(exception);

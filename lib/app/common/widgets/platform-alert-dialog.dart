@@ -37,7 +37,10 @@ class PlatformAlertDialog extends PlatformWidget {
   Widget buildCupertinoWidget(BuildContext context) {
     return CupertinoAlertDialog(
         title: Text(title),
-        content: Text(content),
+        content: Padding(
+          padding: const EdgeInsets.only(top:16.0),
+          child: Text(content),
+        ),
         actions: _buildActions(context));
   }
 
@@ -45,7 +48,10 @@ class PlatformAlertDialog extends PlatformWidget {
   Widget buildMaterialWidget(BuildContext context) {
     return AlertDialog(
         title: Text(title),
-        content: Text(content),
+        content: Padding(
+          padding: const EdgeInsets.only(top:16.0),
+          child: Text(content),
+        ),
         actions: _buildActions(context));
   }
 

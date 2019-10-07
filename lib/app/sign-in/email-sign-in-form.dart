@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_time_tracker/app/common/services/auth-provider.dart';
+
 import 'package:flutter_time_tracker/app/common/services/auth.dart';
-import 'package:flutter_time_tracker/app/common/widgets/patform-alert-dialog.dart';
+import 'package:flutter_time_tracker/app/common/widgets/platform-alert-dialog.dart';
+import 'package:flutter_time_tracker/app/common/widgets/platform-exception-alert-dialog.dart';
 import 'package:flutter_time_tracker/app/sign-in/validators.dart';
+import 'package:provider/provider.dart';
 import '../common/widgets/form-submit-button.dart';
+import 'package:flutter/services.dart';
 
 enum EmailSignInFormType { signIn, register }
 
 class EmailSignInForm extends StatefulWidget with EmailAndPasswordValidators {
-
   @override
   _EmailSignInFormState createState() => _EmailSignInFormState();
 }
@@ -36,13 +38,22 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
     FocusScope.of(context).requestFocus(next);
   }
 
+  @override
+  void dispose() {
+     _emailController.dispose(); 
+     _passwordController.dispose(); 
+     _emailFocusNode.dispose(); 
+     _passwordFocusNode.dispose(); 
+    super.dispose();
+  }
+
   void _submit() async {
     setState(() {
       _isLoading = true;
     });
 
     try {
-       AuthBase auth =AuthProvider.of(context);
+      AuthBase auth = Provider.of<AuthBase>(context);
 
       if (_formType == EmailSignInFormType.signIn) {
         await auth.signInWithEmailAndPasswprd(_email, _password);
@@ -50,12 +61,9 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
         await auth.createUserWithEmailAndPasswprd(_email, _password);
       }
       Navigator.of(context).pop();
-    } catch (e) {
-      PlatformAlertDialog(
-                title: 'Sign in failed!',
-                content: e.toString(),
-                defaultActionText: 'Ok')
-                .show(context);
+    } on PlatformException catch (e) {
+      PlatformExceptionAlertDialog(title: 'Sign in failed!', exception: e)
+          .show(context);
     } finally {
       setState(() {
         _isLoading = false;

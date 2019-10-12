@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_time_tracker/app/common/services/auth.dart';
+ 
 import 'package:flutter_time_tracker/app/sign-in/validators.dart';
+import 'package:flutter_time_tracker/services/auth.dart';
 
 import 'email-sign-in-model.dart';
 

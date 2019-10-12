@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_time_tracker/app/sign-in/sign-in-bloc.dart';
+import 'package:flutter_time_tracker/app/sign-in/sign-in-button.dart';
+import 'package:flutter_time_tracker/common_widgets/platform-exception-alert-dialog.dart';
+import 'package:flutter_time_tracker/services/auth.dart';
 import 'package:provider/provider.dart';
-import './sign-in-button.dart';
-import '../common/services/auth.dart';
-import './email-sign-in-page.dart';
-import '../common/widgets/platform-exception-alert-dialog.dart';
+import 'email-sign-in-page.dart';
+ 
 
 class SignInPage extends StatelessWidget {
   const SignInPage({Key key, @required this.bloc}) : super(key: key);

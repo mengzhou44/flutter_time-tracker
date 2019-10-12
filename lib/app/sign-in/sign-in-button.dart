@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../common/widgets/custom-raised-button.dart';
-
+import 'package:flutter_time_tracker/common_widgets/custom-raised-button.dart';
+ 
 class SignInButton extends CustomRaisedButton {
   static List<Widget> createChildren(text, textColor, logo) {
     final child = Text(

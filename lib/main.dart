@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_time_tracker/services/auth.dart';
 import 'package:provider/provider.dart';
-import './app/landing-page/landing-page.dart';
-
-import 'app/common/services/auth.dart';
+import 'app/landing-page/landing-page.dart';
+ 
 
 void main() {
   runApp(MyApp());

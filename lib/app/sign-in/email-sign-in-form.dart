@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter_time_tracker/app/common/services/auth.dart';
-
-import 'package:flutter_time_tracker/app/common/widgets/platform-exception-alert-dialog.dart';
+import 'package:flutter_time_tracker/common_widgets/form-submit-button.dart';
+import 'package:flutter_time_tracker/common_widgets/platform-exception-alert-dialog.dart';
+import 'package:flutter_time_tracker/services/auth.dart';
 import 'package:provider/provider.dart';
-import '../common/widgets/form-submit-button.dart';
 import 'package:flutter/services.dart';
-
 import 'email-sign-in-bloc.dart';
 import 'email-sign-in-model.dart';
 

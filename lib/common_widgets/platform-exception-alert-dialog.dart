@@ -10,7 +10,12 @@ class PlatformExceptionAlertDialog extends PlatformAlertDialog {
             defaultActionText: 'Ok');
 
   static String _message(PlatformException e) {
-    print(e.code);
+    if (e.message == 'FIRFirestoreErrorDomain') {
+      if (e.code == 'Error 7') {
+        return 'Missing or insufficient permissions';
+      }
+    }
+
     if (_errors[e.code] != null) {
       return _errors[e.code];
     }
@@ -22,3 +27,5 @@ class PlatformExceptionAlertDialog extends PlatformAlertDialog {
     "ERROR_USER_NOT_FOUND": "The user is not found!"
   };
 }
+
+ 

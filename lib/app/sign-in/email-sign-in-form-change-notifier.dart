@@ -2,12 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_time_tracker/common_widgets/form-submit-button.dart';
 import 'package:flutter_time_tracker/common_widgets/platform-exception-alert-dialog.dart';
 import 'package:flutter_time_tracker/services/auth.dart';
-
- 
 import 'package:provider/provider.dart';
- 
 import 'package:flutter/services.dart';
-
 import 'email-sign-in-change-model.dart';
 
 class EmailSignInFormChangeNotifier extends StatefulWidget {

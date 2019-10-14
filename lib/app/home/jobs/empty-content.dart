@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class EmptyContentPage extends StatelessWidget {
-  EmptyContentPage(
+class EmptyContent extends StatelessWidget {
+  EmptyContent(
       {Key key,
       this.title = 'Noting here!',
       this.message = 'Add a job to get started.'})

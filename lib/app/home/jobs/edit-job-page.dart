@@ -64,7 +64,7 @@ class _EditJobPageState extends State<EditJobPage> {
         if (widget.job != null) {
           allNames.remove(widget.job.name);
         }
-        
+
         if (allNames.contains(_name)) {
           PlatformAlertDialog(
                   title: 'Operation failed',
@@ -102,8 +102,9 @@ class _EditJobPageState extends State<EditJobPage> {
 
   @override
   Widget build(BuildContext context) {
+    final titleText = widget.job == null ? 'New Job' : 'Edit Job';
     return Scaffold(
-      appBar: AppBar(title: Text('New Job'), elevation: 2.0, actions: [
+      appBar: AppBar(title: Text(titleText), elevation: 2.0, actions: [
         FlatButton(
           child: Text(
             'Save',

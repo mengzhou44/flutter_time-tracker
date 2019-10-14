@@ -8,7 +8,7 @@ import 'package:flutter_time_tracker/services/database.dart';
 import 'package:provider/provider.dart';
 
 import 'edit-job-page.dart';
- 
+import 'empty-content-page.dart';
 
 class JobsPage extends StatelessWidget {
   Future<void> _signOut(BuildContext context) async {
@@ -68,16 +68,21 @@ class JobsPage extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final jobs = snapshot.data;
+            if (jobs.length == 0) {
+              return EmptyContentPage();
+            }
             final children = jobs
                 .map(
-                  (job) => JobListTile(job: job, onTap: () {
-                  EditJobPage.show(context, job: job);
-
-                  }),
+                  (job) => JobListTile(
+                      job: job,
+                      onTap: () {
+                        EditJobPage.show(context, job: job);
+                      }),
                 )
                 .toList();
             return ListView(children: children);
           }
+
           if (snapshot.hasError) {
             return Center(child: Text(snapshot.error));
           }

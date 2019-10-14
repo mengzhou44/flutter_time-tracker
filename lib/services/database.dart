@@ -5,7 +5,7 @@ import 'api-path.dart';
 import 'firestore-service.dart';
 
 abstract class Database {
-  Future<void> createJob(Job job);
+  Future<void> setJob(Job job);
   Stream<List<Job>> jobsStream();
 }
 
@@ -17,11 +17,18 @@ class FirestoneDatebase implements Database {
 
   FirestoreService _instance = FirestoreService.instance;
 
-  Future<void> createJob(Job job) async => await _instance.setData(
-        path: APIPath.job(uid: uid, jobId: documentIdFromCurrentDate()),
+  Future<void> setJob(Job job) async => await _instance.setData(
+        path: APIPath.job(uid: uid, jobId: job.id),
         data: job.toMap(),
       );
 
   Stream<List<Job>> jobsStream() => _instance.collectionStream<Job>(
-      path: APIPath.jobs(uid: uid), builder: (data) => Job.fromMap(data));
+      path: APIPath.jobs(uid: uid), 
+      builder: (data, documentId) => Job.fromMap(data, documentId)
+  );
 }
+
+
+
+ 
+ 

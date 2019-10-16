@@ -33,6 +33,10 @@ class EntriesBloc {
       _allEntriesStream.map(_createModels);
 
   static List<EntriesListTileModel> _createModels(List<EntryJob> allEntries) {
+    if (allEntries.length == 0) {
+      return [];
+    }
+
     final allDailyJobsDetails = DailyJobsDetails.all(allEntries);
 
     // total duration across all jobs

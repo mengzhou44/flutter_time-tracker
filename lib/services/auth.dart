@@ -6,7 +6,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class User {
   final String userId;
-  User({@required this.userId});
+  final String photoUrl;
+  final String displayName;
+  User({@required this.userId, @required this.photoUrl, @required this.displayName});
 }
 
 abstract class AuthBase {
@@ -27,7 +29,7 @@ class Auth implements AuthBase {
     if (user == null) {
       return null;
     }
-    return User(userId: user.uid);
+    return User(userId: user.uid, photoUrl: user.photoUrl, displayName: user.displayName);
   }
 
   Stream<User> get onAuthStateChanged {
@@ -65,10 +67,12 @@ class Auth implements AuthBase {
             await _firebaseAuth.signInWithCredential(credential);
         return _userFromFirebase(authResult.user);
       } else {
-        throw PlatformException(code: 'ERROR_MISSING_TOKEN', message:'Missing Auth Token');
+        throw PlatformException(
+            code: 'ERROR_MISSING_TOKEN', message: 'Missing Auth Token');
       }
     } else {
-        throw PlatformException(code: 'ERROR_USER_ABORT', message:'User aborted!');
+      throw PlatformException(
+          code: 'ERROR_USER_ABORT', message: 'User aborted!');
     }
   }
 
@@ -87,8 +91,8 @@ class Auth implements AuthBase {
 
       return _userFromFirebase(authResult.user);
     } else {
-       throw PlatformException(code: 'ERROR_MISSING_TOKEN', message:'Missing Auth Token');
-      
+      throw PlatformException(
+          code: 'ERROR_MISSING_TOKEN', message: 'Missing Auth Token');
     }
   }
 
